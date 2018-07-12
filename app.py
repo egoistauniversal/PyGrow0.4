@@ -52,29 +52,27 @@ def test_connect():
 # ----------------------countdown-------------------------------------
 
 # this is only called once index.html has been loaded.
-@socketio.on('get_module_countdown_time')
-def on_get_module_countdown_time(data):
+@socketio.on('countdown_get_timer_on_load')
+def on_countdown_get_timer_on_load(data):
     module = get_module_by_program_id(data)
     # if automatic == 1
     if module.get_automatic():
         seconds = module.get_seconds_on_automatic()
     else:
         seconds = module.get_seconds_on_manual()
-    socketio.emit('update_countdown_label_timers_on_start',
-                  {'program_id': data['program_id'], 'timeout': seconds})
+    socket_emit_countdown_timer(data, seconds)
 
 
-@socketio.on('pause_countdown_timer')
-def on_pause_countdown_timer(data):
+@socketio.on('countdown_pause_timer')
+def on_countdown_pause_timer(data):
     module = get_module_by_program_id(data)
     module.timer_stop()
 
 
-@socketio.on('resume_countdown_timer')
-def on_resume_countdown_timer(data):
+@socketio.on('countdown_resume_timer')
+def on_countdown_resume_timer(data):
     module = get_module_by_program_id(data)
-    socketio.emit('update_countdown_label_timers_on_start',
-                  {'program_id': data['program_id'], 'timeout': module.get_seconds_on_manual()})
+    socket_emit_countdown_timer(data, module.get_seconds_on_manual())
     module.timer_resume()
 
 
@@ -84,17 +82,21 @@ def on_countdown_change_state_manual(data):
     module.invert_state()
 
 
-@socketio.on('countdown_reset')
-def on_countdown_reset(data):
+@socketio.on('countdown_reset_timer')
+def on_countdown_reset_timer(data):
     module = get_module_by_program_id(data)
     module.timer_reset()
-    socketio.emit('update_countdown_label_timers_on_start',
-                  {'program_id': data['program_id'], 'timeout': module.get_seconds_on_manual()})
+    socket_emit_countdown_timer(data, module.get_seconds_on_manual())
 
 
 def countdown_state_changed(program_id, timeout):
     socketio.emit('countdown_state_changed',
                   {'program_id': program_id, 'timeout': timeout})
+
+
+def socket_emit_countdown_timer(d, s):
+    socketio.emit('update_countdown_label_timers_on_start',
+                  {'program_id': d['program_id'], 'timeout': s})
 
 
 def get_module_by_program_id(data):

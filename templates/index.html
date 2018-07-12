@@ -132,7 +132,7 @@
                 case 12:
                     enableDisableCountdownButton(document.getElementById("countdownCheckbox" + module[0]),
                                         "countdownStateButton" + module[0], "countdownResetButton" + module[0]);
-                    socket.emit('get_module_countdown_time', {program_id: module[0]});
+                    socket.emit('countdown_get_timer_on_load', {program_id: module[0]});
                     break;
                 case 13:
                     break;

@@ -107,7 +107,7 @@ function clickCountdownStateButton(program_id, buttonID){
 };
 
 function clickCountdownResetButton(program_id){
-    socket.emit('countdown_reset', {program_id: program_id});
+    socket.emit('countdown_reset_timer', {program_id: program_id});
 }
 
 function enableDisableCountdownButton(checkbox, stateButtonID, resetButtonID) {
@@ -125,14 +125,14 @@ function changeCountdownAutomaticLabelText(checked, labelID, program_id){
     if (checked == true){
         document.getElementById(labelID).innerHTML = "Automatic";
         // emit module program_id to resume timer
-        socket.emit('resume_countdown_timer', {program_id: program_id});
+        socket.emit('countdown_resume_timer', {program_id: program_id});
         //console.log('module countdown ' + program_id + ' timer resumed');
     }
     else{
         // set countdown module to manual
         document.getElementById(labelID).innerHTML = "Manual";
         // emit module program_id to pause timer
-        socket.emit('pause_countdown_timer', {program_id: program_id});
+        socket.emit('countdown_pause_timer', {program_id: program_id});
         //console.log('module countdown ' + program_id + ' timer paused');
     }
 };
