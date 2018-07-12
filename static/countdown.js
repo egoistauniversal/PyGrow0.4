@@ -60,8 +60,8 @@ function createCountdownRow(program_id, name, state, automatic){
         var myAutomaticTextNode = document.createTextNode("Automatic");
     }
     myCheckbox.addEventListener('change', function(){
-        enableDisableButton(myCheckbox, myStateButton.id, myResetButton.id);
-        changeAutomaticLabelText(myCheckbox.checked, myAutomaticLabel.id, program_id);
+        enableDisableCountdownButton(myCheckbox, myStateButton.id, myResetButton.id);
+        changeCountdownAutomaticLabelText(myCheckbox.checked, myAutomaticLabel.id, program_id);
     });
 
     //... creates a label for checkbox ...
@@ -110,7 +110,7 @@ function clickCountdownResetButton(program_id){
     socket.emit('countdown_reset', {program_id: program_id});
 }
 
-function enableDisableButton(checkbox, stateButtonID, resetButtonID) {
+function enableDisableCountdownButton(checkbox, stateButtonID, resetButtonID) {
     if(checkbox.checked == false){
         document.getElementById(stateButtonID).disabled = false;
         document.getElementById(resetButtonID).disabled = false;
@@ -121,7 +121,7 @@ function enableDisableButton(checkbox, stateButtonID, resetButtonID) {
     }
 };
 
-function changeAutomaticLabelText(checked, labelID, program_id){
+function changeCountdownAutomaticLabelText(checked, labelID, program_id){
     if (checked == true){
         document.getElementById(labelID).innerHTML = "Automatic";
         // emit module program_id to resume timer
