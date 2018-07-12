@@ -17,7 +17,7 @@
         myCountdownTable.style.width = "100%";
 
         namespace = '/carpi';
-        var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+        var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
         // verify our websocket connection is established
         socket.on('connect', function() {

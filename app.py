@@ -39,11 +39,10 @@ def background_thread():
         fr = randint(10, 30)
 
         socketio.emit('my_response',
-                      {'data': 'Values', 'ext': ext, 'fr': fr},
-                      namespace='/carpi')
+                      {'data': 'Values', 'ext': ext, 'fr': fr})
 
 
-@socketio.on('connect', namespace='/carpi')
+@socketio.on('connect')
 def test_connect():
     global thread
     if thread is None:
@@ -53,7 +52,7 @@ def test_connect():
 # ----------------------countdown-------------------------------------
 
 # this is only called once index.html has been loaded.
-@socketio.on('get_module_countdown_time', namespace='/carpi')
+@socketio.on('get_module_countdown_time')
 def on_get_module_countdown_time(data):
     module = get_module_by_program_id(data)
     # if automatic == 1
@@ -62,44 +61,40 @@ def on_get_module_countdown_time(data):
     else:
         seconds = module.get_seconds_on_manual()
     socketio.emit('update_countdown_label_timers_on_start',
-                  {'program_id': data['program_id'], 'timeout': seconds},
-                  namespace='/carpi')
+                  {'program_id': data['program_id'], 'timeout': seconds})
 
 
-@socketio.on('pause_countdown_timer', namespace='/carpi')
+@socketio.on('pause_countdown_timer')
 def on_pause_countdown_timer(data):
     module = get_module_by_program_id(data)
     module.timer_stop()
 
 
-@socketio.on('resume_countdown_timer', namespace='/carpi')
+@socketio.on('resume_countdown_timer')
 def on_resume_countdown_timer(data):
     module = get_module_by_program_id(data)
     socketio.emit('update_countdown_label_timers_on_start',
-                  {'program_id': data['program_id'], 'timeout': module.get_seconds_on_manual()},
-                  namespace='/carpi')
+                  {'program_id': data['program_id'], 'timeout': module.get_seconds_on_manual()})
     module.timer_resume()
 
 
-@socketio.on('countdown_change_state_manual', namespace='/carpi')
+@socketio.on('countdown_change_state_manual')
 def on_countdown_change_state_manual(data):
     module = get_module_by_program_id(data)
     module.invert_state()
 
 
-@socketio.on('countdown_reset', namespace='/carpi')
+@socketio.on('countdown_reset')
 def on_countdown_reset(data):
     module = get_module_by_program_id(data)
     module.timer_reset()
     socketio.emit('update_countdown_label_timers_on_start',
-                  {'program_id': data['program_id'], 'timeout': module.get_seconds_on_manual()},
-                  namespace='/carpi')
+                  {'program_id': data['program_id'], 'timeout': module.get_seconds_on_manual()})
 
 
 def countdown_state_changed(program_id, timeout):
     socketio.emit('countdown_state_changed',
-                  {'program_id': program_id, 'timeout': timeout},
-                  namespace='/carpi')
+                  {'program_id': program_id, 'timeout': timeout})
 
 
 def get_module_by_program_id(data):
