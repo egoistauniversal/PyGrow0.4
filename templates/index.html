@@ -62,7 +62,6 @@
 
                     // appends the TableBody into the table
                     myCountdownTable.appendChild(tb);
-
                     break;
                 case 13:
                     break;
@@ -131,7 +130,7 @@
                 case 11:
                     break;
                 case 12:
-                    enableDisableButton(document.getElementById("countdownCheckbox" + module[0]),
+                    enableDisableCountdownButton(document.getElementById("countdownCheckbox" + module[0]),
                                         "countdownStateButton" + module[0], "countdownResetButton" + module[0]);
                     socket.emit('get_module_countdown_time', {program_id: module[0]});
                     break;
