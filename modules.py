@@ -68,28 +68,21 @@ class Countdown:
 
     def start(self):
         if self._automatic:
-            if self._state:
-                timeout = self._time_on
-            else:
-                timeout = self._time_off
-            self._timer = TimerClass(self.change_state_automatic, timeout)
+            self._timer = TimerClass(self.change_state_automatic, self.get_state_timeout())
             self._timer.start()
             # print("{} - OFF - {}".format(self._program_id, timeout))
 
     def change_state_automatic(self):
+        # self._pause_time has to be always none in this method
         self._pause_time = None
-        if self._state:
-            self._state = 0
-            timeout = self._time_off
-        else:
-            self._state = 1
-            timeout = self._time_on
-        self._timer = TimerClass(self.change_state_automatic, timeout)
-        self._timer.start()
-        self._callback_function(self._program_id, timeout)
-        # print('program id: {} change state to: {}'.format(self._program_id, self._state))
 
-    def change_state_manual(self):
+        self.invert_state()
+        self._timer = TimerClass(self.change_state_automatic, self.get_state_timeout())
+        self._timer.start()
+        self._callback_function(self._program_id, self.get_state_timeout())
+        print('program id: {} change state to: {}'.format(self._program_id, self._state))
+
+    def invert_state(self):
         if self._state:
             self._state = 0
         else:
@@ -98,24 +91,24 @@ class Countdown:
     def timer_stop(self):
         self._automatic = 0
         self._timer.stop()
-        self._pause_time = self.get_seconds()
-        self._timer = None
+
+        # if self._pause_exist
+        if self._pause_time:
+            self._pause_time = self._pause_time - self._timer.get_seconds()
+        else:
+            self._pause_time = self.get_seconds_on_automatic()
+            print("program id: {} - STOP-Pause time: {}".format(self._program_id, self._pause_time))
+            self._timer = None
 
     def timer_resume(self):
         self._automatic = 1
-        # check if app starts with automatic set to 0
-        if self._pause_time:
-            s = self._pause_time
-        else:
-            s = self.get_seconds()
-
-        self._timer = TimerClass(self.change_state_automatic, s)
+        self._timer = TimerClass(self.change_state_automatic, self.get_seconds_on_manual())
         self._timer.start()
+        print("program id: {} - RESUME-Pause time: {}".format(self._program_id, self._pause_time))
+        # self._pause_time = None
 
-    # -----------------------------Set-------------------------------
-
-    def set_state(self, value):
-        self._state = value
+    def timer_reset(self):
+        self._pause_time = self.get_state_timeout()
 
     # -----------------------------Get-------------------------------
 
@@ -128,31 +121,28 @@ class Countdown:
     def get_automatic(self):
         return self._automatic
 
-    def get_timeout(self):
+    def get_state_timeout(self):
         if self._state:
             return self._time_on
         else:
             return self._time_off
 
     def get_seconds(self):
-        # if self._pause_time as not been set
-        if self._pause_time is None:
-            if self._state:
-                # if self._state == 1 return self._time_on
-                s = self._time_on
-            else:
-                # if self._state == 0 return self._time_off
-                s = self._time_off
-            # if self._timer has not been set
-            if self._timer is None:
-                return int(s)
-            else:
-                return int(s - self._timer.get_seconds())
+        pass
+
+    def get_seconds_on_automatic(self):
+        # if self._pause_time: only used when loading page
+        if self._pause_time:
+            return self._pause_time - self._timer.get_seconds()
         else:
-            if self._timer is None:
-                return int(self._pause_time)
-            else:
-                return int(self._pause_time - self._timer.get_seconds())
+            return int(self.get_state_timeout() - self._timer.get_seconds())
+
+    def get_seconds_on_manual(self):
+        # if self._pause_time has some value
+        if self._pause_time:
+            return self._pause_time
+        else:
+            return self.get_state_timeout()
 
 
 # -----------------------------------------------------------------
