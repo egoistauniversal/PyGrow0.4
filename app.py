@@ -34,7 +34,7 @@ def index():
 def background_thread():
     """Example of how to send server generated events to clients."""
     while True:
-        socketio.sleep(200)
+        socketio.sleep(3)
         ext = randint(-10, 30)
         fr = randint(10, 30)
 
