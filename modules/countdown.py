@@ -26,45 +26,19 @@ class TimerClass(threading.Thread):
         return t.total_seconds()
 
 
-# ------------------------------------------------------
-
-
-class Clock:
-    def __init__(self, program_id, module_id, pin, time_on, time_off):
-        self.program_id = program_id
-        self.module_id = module_id
-        self.pin = pin
-        self.time_on = int(time_on)
-        self.time_off = int(time_off)
-        self.state = 0
-        self.active = 1
-
-# -------------------------------------------------
-
-
 class Countdown:
-    def __init__(self, my_function):
-        self._program_id = 0
-        self._module_id = 0
-        self._name = ''
-        self._pin = 0
-        self._time_on = 0
-        self._time_off = 0
-        self._state = 0
-        self._automatic = 0
+    def __init__(self, row, my_function):
+        self._program_id = int(row[0])
+        self._module_id = int(row[1])
+        self._name = row[2]
+        self._pin = int(row[3])
+        self._time_on = int(row[4])
+        self._time_off = int(row[5])
+        self._state = row[6]
+        self._automatic = int(row[7])
         self._pause_time = None
         self._timer = None
         self._callback_function = my_function
-
-    def set_properties(self, program_id, module_id, name, pin, time_on, time_off, state, automatic):
-        self._program_id = program_id
-        self._module_id = module_id
-        self._name = name
-        self._pin = pin
-        self._time_on = int(time_on)
-        self._time_off = int(time_off)
-        self._state = state
-        self._automatic = automatic
 
     def start(self):
         if self._automatic:
@@ -143,15 +117,3 @@ class Countdown:
             return self._pause_time
         else:
             return self.get_state_timeout()
-
-
-# -----------------------------------------------------------------
-
-
-class Sensor:
-    def __init__(self, program_id, module_id, pin, trigger_time):
-        self.program_id = program_id
-        self.module_id = module_id
-        self.pin = pin
-        self.trigger_time = trigger_time
-

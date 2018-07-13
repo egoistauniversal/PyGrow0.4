@@ -1,7 +1,7 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 from database import Database
-import modules
+from modules import countdown
 import json
 from random import randint
 
@@ -34,7 +34,7 @@ def index():
 def background_thread():
     """Example of how to send server generated events to clients."""
     while True:
-        socketio.sleep(3)
+        socketio.sleep(5)
         ext = randint(-10, 30)
         fr = randint(10, 30)
 
@@ -108,30 +108,16 @@ def get_module_by_program_id(data):
 
 # -------------------------------------------------------------------------------
 
-def _setup_clock_properties():
-    print("Clock properties set")
-
-
-def _setup_countdown_properties(program_id, module_id):
-    rows = myDataBase.query_select_countdown_properties(program_id)
-    if len(rows) == 1:
-        row = rows[0]
-        my_countdown = modules.Countdown(countdown_state_changed)
-        my_countdown.set_properties(program_id, module_id, row[0], row[1], row[2], row[3], row[4], row[5])
-        myModuleList.append(my_countdown)
-    else:
-        print("Warning: Possible program_id duplication!!!")
-
-
 def _run_on_start():
     global myModuleList
-    rows = myDataBase.query_select_modules()
+    rows = myDataBase.query_select_all_modules()
     for row in rows:
         # if module_id
         if row[1] == 11:
             print("Setup clock properties")
         elif row[1] == 12:
-            _setup_countdown_properties(row[0], row[1])
+            m = countdown.Countdown(row, countdown_state_changed)
+            myModuleList.append(m)
         elif row[1] == 13:
             print("Setup temperature properties")
 

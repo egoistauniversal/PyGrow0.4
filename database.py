@@ -10,22 +10,12 @@ class Database:
         except sqlite3.Error as e:
             sys.exit(e)
 
-    def query_select_modules(self):
+    def query_select_all_modules(self):
         try:
-            self.cur.execute('SELECT programs.program_id, programs.module_id '
+            self.cur.execute('SELECT programs.program_id, programs.module_id, programs.name, programs.pin, '
+                             'programs.time_on, programs.time_off, programs.state, programs.automatic '
                              'FROM programs '
                              'WHERE programs.enabled=1')
-        except sqlite3.Error as e:
-            sys.exit(e)
-
-        return self.cur.fetchall()
-
-    def query_select_countdown_properties(self, program_id):
-        try:
-            self.cur.execute('SELECT programs.name, programs.pin, programs.time_on, programs.time_off, '
-                             'programs.state, programs.automatic '
-                             'FROM programs '
-                             'WHERE programs.program_id=?', (program_id,))
         except sqlite3.Error as e:
             sys.exit(e)
 
