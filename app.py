@@ -76,17 +76,17 @@ def on_countdown_resume_timer(data):
     module.timer_resume()
 
 
-@socketio.on('countdown_change_state_manual')
-def on_countdown_change_state_manual(data):
-    module = get_module_by_program_id(data)
-    module.invert_state()
-
-
 @socketio.on('countdown_reset_timer')
 def on_countdown_reset_timer(data):
     module = get_module_by_program_id(data)
     module.timer_reset()
     socket_emit_countdown_timer(data, module.get_seconds_on_manual())
+
+
+@socketio.on('countdown_change_state_manual')
+def on_countdown_change_state_manual(data):
+    module = get_module_by_program_id(data)
+    module.invert_state()
 
 
 def countdown_state_changed(program_id, timeout):

@@ -54,7 +54,7 @@ class Countdown:
         self._timer = TimerClass(self.change_state_automatic, self.get_state_timeout())
         self._timer.start()
         self._callback_function(self._program_id, self.get_state_timeout())
-        print('program id: {} change state to: {}'.format(self._program_id, self._state))
+        # print('program id: {} change state to: {}'.format(self._program_id, self._state))
 
     def invert_state(self):
         if self._state:
@@ -71,15 +71,14 @@ class Countdown:
             self._pause_time = self._pause_time - self._timer.get_seconds()
         else:
             self._pause_time = self.get_seconds_on_automatic()
-            print("program id: {} - STOP-Pause time: {}".format(self._program_id, self._pause_time))
+            # print("program id: {} - STOP-Pause time: {}".format(self._program_id, self._pause_time))
             self._timer = None
 
     def timer_resume(self):
         self._automatic = 1
         self._timer = TimerClass(self.change_state_automatic, self.get_seconds_on_manual())
         self._timer.start()
-        print("program id: {} - RESUME-Pause time: {}".format(self._program_id, self._pause_time))
-        # self._pause_time = None
+        # print("program id: {} - RESUME-Pause time: {}".format(self._program_id, self._pause_time))
 
     def timer_reset(self):
         self._pause_time = self.get_state_timeout()
