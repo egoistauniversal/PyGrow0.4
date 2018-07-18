@@ -2,6 +2,7 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO
 from database import Database
 from modules import countdown
+from modules import clock
 import json
 from random import randint
 
@@ -48,8 +49,14 @@ def test_connect():
     if thread is None:
         thread = socketio.start_background_task(target=background_thread)
 
+# ----------------------Clock-------------------------------------
 
-# ----------------------countdown-------------------------------------
+
+def clock_state_changed():
+    pass
+
+# ----------------------Countdown-------------------------------------
+
 
 # this is only called once index.html has been loaded.
 @socketio.on('countdown_get_timer_on_load')
@@ -114,7 +121,8 @@ def _run_on_start():
     for row in rows:
         # if module_id
         if row[1] == 11:
-            print("Setup clock properties")
+            m = clock.Clock(row, clock_state_changed)
+            myModuleList.append(m)
         elif row[1] == 12:
             m = countdown.Countdown(row, countdown_state_changed)
             myModuleList.append(m)
@@ -130,7 +138,7 @@ def _run_on_start():
         # start all modules
         module.start()
 
-    socketio.run(app, debug=True, use_reloader=False)
+    socketio.run(app, debug=False, use_reloader=False)
 
 
 if __name__ == '__main__':

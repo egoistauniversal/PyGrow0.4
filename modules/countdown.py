@@ -2,7 +2,7 @@ import threading
 import datetime
 
 
-class TimerClass(threading.Thread):
+class CountdownTimerClass(threading.Thread):
     def __init__(self, my_function, timeout):
         threading.Thread.__init__(self)
         self.event = threading.Event()
@@ -42,7 +42,7 @@ class Countdown:
 
     def start(self):
         if self._automatic:
-            self._timer = TimerClass(self.change_state_automatic, self.get_state_timeout())
+            self._timer = CountdownTimerClass(self.change_state_automatic, self.get_state_timeout())
             self._timer.start()
             # print("{} - OFF - {}".format(self._program_id, timeout))
 
@@ -51,7 +51,7 @@ class Countdown:
         self._pause_time = None
 
         self.invert_state()
-        self._timer = TimerClass(self.change_state_automatic, self.get_state_timeout())
+        self._timer = CountdownTimerClass(self.change_state_automatic, self.get_state_timeout())
         self._timer.start()
         self._callback_function(self._program_id, self.get_state_timeout())
         # print('program id: {} change state to: {}'.format(self._program_id, self._state))
@@ -76,7 +76,7 @@ class Countdown:
 
     def timer_resume(self):
         self._automatic = 1
-        self._timer = TimerClass(self.change_state_automatic, self.get_seconds_on_manual())
+        self._timer = CountdownTimerClass(self.change_state_automatic, self.get_seconds_on_manual())
         self._timer.start()
         # print("program id: {} - RESUME-Pause time: {}".format(self._program_id, self._pause_time))
 
@@ -99,9 +99,6 @@ class Countdown:
             return self._time_on
         else:
             return self._time_off
-
-    def get_seconds(self):
-        pass
 
     def get_seconds_on_automatic(self):
         # if self._pause_time: only used when loading page
