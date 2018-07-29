@@ -52,8 +52,35 @@ def test_connect():
 # ----------------------Clock-------------------------------------
 
 
-def clock_state_changed():
-    pass
+# this is only called once index.html has been loaded.
+@socketio.on('clock_get_timer_on_load')
+def on_clock_get_timer_on_load(data):
+    module = get_module_by_program_id(data)
+    # print("Time left: {}".format(module.get_time_left()))
+    socket_emit_clock_timer(data, module.get_time_left())
+
+
+@socketio.on('clock_pause_timer')
+def on_clock_pause_timer(data):
+    module = get_module_by_program_id(data)
+    module.timer_stop()
+
+
+@socketio.on('clock_resume_timer')
+def on_clock_resume_timer(data):
+    module = get_module_by_program_id(data)
+    socket_emit_clock_timer(data, module.get_time_left())
+    module.timer_resume()
+
+
+def socket_emit_clock_timer(d, s):
+    socketio.emit('update_clock_label_timers_on_start',
+                  {'program_id': d['program_id'], 'timeout': s})
+
+
+def clock_state_changed(program_id, timeout):
+    socketio.emit('clock_state_changed',
+                  {'program_id': program_id, 'timeout': timeout})
 
 # ----------------------Countdown-------------------------------------
 

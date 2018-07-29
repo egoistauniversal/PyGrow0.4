@@ -1,4 +1,4 @@
-function createCountdownRow(program_id, name, state, automatic){
+function createClockRow(program_id, name, state, automatic){
     // creates <tbody> element
     var myTableBody = document.createElement("TBODY");
 
@@ -9,48 +9,36 @@ function createCountdownRow(program_id, name, state, automatic){
     var myNameLabelCell = document.createElement("TD");
     var myTimeLabelCell = document.createElement("TD");
     var myStateButtonCell = document.createElement("TD");
-    var myResetButtonCell = document.createElement("TD");
     var myCheckboxCell = document.createElement("TD");
 
     // creates name Label element
     var myNameLabel = document.createElement("LABEL");
-    myNameLabel.id = "countdownNameLabel" + program_id;
+    myNameLabel.id = "clockNameLabel" + program_id;
     var myNameTextNode = document.createTextNode(name + "-" + program_id);
     myNameLabel.appendChild(myNameTextNode);
 
     // creates time Label element
     var myTimeLabel = document.createElement("LABEL");
-    myTimeLabel.id = "countdownTimeLabel" + program_id;
-    // myTimeLabel.dataset.timeleft = "test1";
-    // myTimeLabel.setAttribute('data-newtime', 'test2');
+    myTimeLabel.id = "clockTimeLabel" + program_id;
 
     // creates button element "State"
     var myStateButton = document.createElement('input');
     myStateButton.type = 'button';
-    myStateButton.id = "countdownStateButton" + program_id;
+    myStateButton.id = "clockStateButton" + program_id;
     if (state == 0){myStateButton.value = 'OFF';}
     else{myStateButton.value = 'ON';}
     myStateButton.addEventListener('click', function(){
-        clickCountdownStateButton(program_id, myStateButton.id);
-    });
-
-    // creates button element "Reset"
-    var myResetButton = document.createElement('input');
-    myResetButton.type = 'button';
-    myResetButton.id = "countdownResetButton" + program_id;
-    myResetButton.value = "Reset";
-    myResetButton.addEventListener('click', function(){
-        clickCountdownResetButton(program_id);
+        clickClockStateButton(program_id, myStateButton.id);
     });
 
     // creates a label for checkbox ...
     var myAutomaticLabel = document.createElement("LABEL");
-    myAutomaticLabel.id = "countdownAutomaticLabel" + program_id;
+    myAutomaticLabel.id = "clockAutomaticLabel" + program_id;
 
     // creates a checkbox
     var myCheckbox = document.createElement("input");
     myCheckbox.type = 'checkbox';
-    myCheckbox.id = "countdownCheckbox" + program_id;
+    myCheckbox.id = "clockCheckbox" + program_id;
     if (automatic == 0){
         myCheckbox.checked = false;
         var myAutomaticTextNode = document.createTextNode("Manual");
@@ -60,8 +48,8 @@ function createCountdownRow(program_id, name, state, automatic){
         var myAutomaticTextNode = document.createTextNode("Automatic");
     }
     myCheckbox.addEventListener('change', function(){
-        enableDisableCountdownButton(myCheckbox, myStateButton.id, myResetButton.id);
-        changeCountdownAutomaticLabelText(myCheckbox.checked, myAutomaticLabel.id, program_id);
+        enableDisableClockButton(myCheckbox, myStateButton.id);
+        changeClockAutomaticLabelText(myCheckbox.checked, myAutomaticLabel.id, program_id);
     });
 
     //... creates a label for checkbox ...
@@ -72,7 +60,6 @@ function createCountdownRow(program_id, name, state, automatic){
     myNameLabelCell.appendChild(myNameLabel);
     myTimeLabelCell.appendChild(myTimeLabel);
     myStateButtonCell.appendChild(myStateButton);
-    myResetButtonCell.appendChild(myResetButton);
     myCheckboxCell.appendChild(myCheckbox);
     myCheckboxCell.appendChild(myAutomaticLabel);
 
@@ -80,7 +67,6 @@ function createCountdownRow(program_id, name, state, automatic){
     myRow.appendChild(myNameLabelCell);
     myRow.appendChild(myTimeLabelCell);
     myRow.appendChild(myStateButtonCell);
-    myRow.appendChild(myResetButtonCell);
     myRow.appendChild(myCheckboxCell);
 
     // appends the row <tr> into the TableBody
@@ -89,51 +75,42 @@ function createCountdownRow(program_id, name, state, automatic){
     return myTableBody;
 };
 
-function toggleCountdownButton(buttonID){
+function toggleClockButton(buttonID){
     var elem = document.getElementById(buttonID);
     if (elem.value=="OFF"){
-        // elem.style.backgroundColor = '#ccffcc';
         elem.value = "ON";
     }
     else {
-        // elem.style.backgroundColor = '';
         elem.value = "OFF";
     }
 };
 
-function clickCountdownStateButton(program_id, buttonID){
-    toggleCountdownButton(buttonID);
-    socket.emit('countdown_change_state_manual', {program_id: program_id});
+function clickClockStateButton(program_id, buttonID){
+    toggleClockButton(buttonID);
+    socket.emit('clock_change_state_manual', {program_id: program_id});
 };
 
-function clickCountdownResetButton(program_id){
-    socket.emit('countdown_reset_timer', {program_id: program_id});
-}
-
-function enableDisableCountdownButton(checkbox, stateButtonID, resetButtonID) {
+function enableDisableClockButton(checkbox, stateButtonID) {
     if(checkbox.checked == false){
         document.getElementById(stateButtonID).disabled = false;
-        document.getElementById(resetButtonID).disabled = false;
     }
     else{
         document.getElementById(stateButtonID).disabled = true;
-        document.getElementById(resetButtonID).disabled = true;
     }
 };
 
-function changeCountdownAutomaticLabelText(checked, labelID, program_id){
+function changeClockAutomaticLabelText(checked, labelID, program_id){
     if (checked == true){
         document.getElementById(labelID).innerHTML = "Automatic";
         // emit module program_id to resume timer
-        socket.emit('countdown_resume_timer', {program_id: program_id});
+        socket.emit('clock_resume_timer', {program_id: program_id});
         //console.log('module countdown ' + program_id + ' timer resumed');
     }
     else{
         // set countdown module to manual
         document.getElementById(labelID).innerHTML = "Manual";
         // emit module program_id to pause timer
-        socket.emit('countdown_pause_timer', {program_id: program_id});
+        socket.emit('clock_pause_timer', {program_id: program_id});
         //console.log('module countdown ' + program_id + ' timer paused');
     }
 };
-
