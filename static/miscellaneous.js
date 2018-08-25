@@ -5,7 +5,7 @@ function printTimer(labelID, checkboxID, secondsLeft){
     var timeout = new Date();
 
     // adding "+1" in order to print correct initial amount of second when the page loads and checkbox is set to manual
-    timeout.setSeconds(timeout.getSeconds() + secondsLeft);
+    timeout.setSeconds(timeout.getSeconds() + secondsLeft + 1);
 
     var countdownTimer = setInterval(function(){
         if (document.getElementById(checkboxID).checked == false){
@@ -24,11 +24,24 @@ function printTimer(labelID, checkboxID, secondsLeft){
             hours = checkTimeFormat(hours);
             minutes = checkTimeFormat(minutes);
             seconds = checkTimeFormat(seconds);
+
             document.getElementById(labelID).innerHTML = hours + ":" + minutes + ":" + seconds;
         }
         if(now >= timeout)
             clearInterval(countdownTimer);
     },1000);
+};
+
+function secondsToTime(labelID, secs){
+    var hours   = Math.floor(secs / 3600);
+    var minutes = Math.floor((secs - (hours * 3600)) / 60);
+    var seconds = secs - (hours * 3600) - (minutes * 60);
+
+    hours = checkTimeFormat(hours);
+    minutes = checkTimeFormat(minutes);
+    seconds = checkTimeFormat(seconds);
+
+    document.getElementById(labelID).innerHTML = hours + ":" + minutes + ":" + seconds;
 };
 
 function checkTimeFormat(i){

@@ -7,6 +7,8 @@ function createClockRow(program_id, name, state, automatic){
 
     // creates a <td> element
     var myNameLabelCell = document.createElement("TD");
+    var myTimeOnCell = document.createElement("TD");
+    var myTimeOffCell = document.createElement("TD");
     var myTimeLabelCell = document.createElement("TD");
     var myStateButtonCell = document.createElement("TD");
     var myCheckboxCell = document.createElement("TD");
@@ -16,6 +18,14 @@ function createClockRow(program_id, name, state, automatic){
     myNameLabel.id = "clockNameLabel" + program_id;
     var myNameTextNode = document.createTextNode(name + "-" + program_id);
     myNameLabel.appendChild(myNameTextNode);
+
+    // created "Time On" label element
+    var myTimeOnLabel = document.createElement("LABEL");
+    myTimeOnLabel.id = "clockTimeOnLabel" + program_id;
+
+    // created "Time Off" label element
+    var myTimeOffLabel = document.createElement("LABEL");
+    myTimeOffLabel.id = "clockTimeOffLabel" + program_id;
 
     // creates time Label element
     var myTimeLabel = document.createElement("LABEL");
@@ -58,6 +68,8 @@ function createClockRow(program_id, name, state, automatic){
 
     // appends the elements we created into the cell <td>
     myNameLabelCell.appendChild(myNameLabel);
+    myTimeOnCell.appendChild(myTimeOnLabel);
+    myTimeOffCell.appendChild(myTimeOffLabel);
     myTimeLabelCell.appendChild(myTimeLabel);
     myStateButtonCell.appendChild(myStateButton);
     myCheckboxCell.appendChild(myCheckbox);
@@ -65,6 +77,8 @@ function createClockRow(program_id, name, state, automatic){
 
     // appends the cell <td> into the row <tr>
     myRow.appendChild(myNameLabelCell);
+    myRow.appendChild(myTimeOnCell);
+    myRow.appendChild(myTimeOffCell);
     myRow.appendChild(myTimeLabelCell);
     myRow.appendChild(myStateButtonCell);
     myRow.appendChild(myCheckboxCell);

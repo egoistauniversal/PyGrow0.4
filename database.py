@@ -13,7 +13,7 @@ class Database:
     def query_select_all_modules(self):
         try:
             self.cur.execute('SELECT programs.program_id, programs.module_id, programs.name, programs.pin, '
-                             'programs.time_on, programs.time_off, programs.state, programs.automatic '
+                             'programs.time_01, programs.time_02, programs.state, programs.automatic '
                              'FROM programs '
                              'WHERE programs.enabled=1')
         except sqlite3.Error as e:

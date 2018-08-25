@@ -57,7 +57,10 @@ def test_connect():
 def on_clock_get_timer_on_load(data):
     module = get_module_by_program_id(data)
     # print("Time left: {}".format(module.get_time_left()))
-    socket_emit_clock_timer(data, module.get_time_left())
+    # socket_emit_clock_timer(data, module.get_time_left())
+    socketio.emit('update_clock_label_timers_on_start',
+                  {'program_id': data['program_id'], 'switch_on': module.get_seconds_to_switch_on(),
+                   'switch_off': module.get_seconds_to_switch_off(), 'timeout': module.get_time_left()})
 
 
 @socketio.on('clock_pause_timer')
@@ -73,6 +76,7 @@ def on_clock_resume_timer(data):
     module.timer_resume()
 
 
+# REMOVE
 def socket_emit_clock_timer(d, s):
     socketio.emit('update_clock_label_timers_on_start',
                   {'program_id': d['program_id'], 'timeout': s})
@@ -165,7 +169,7 @@ def _run_on_start():
         # start all modules
         module.start()
 
-    socketio.run(app, debug=False, use_reloader=False)
+    socketio.run(app, debug=True, use_reloader=False)
 
 
 if __name__ == '__main__':

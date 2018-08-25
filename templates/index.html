@@ -27,6 +27,8 @@
         // update label timers after index.html has been loaded: msg{program_id, timeout}
         socket.on('update_clock_label_timers_on_start', function(msg) {
             printTimer("clockTimeLabel" + msg.program_id, "clockCheckbox" + msg.program_id, msg.timeout);
+            secondsToTime("clockTimeOnLabel" + msg.program_id, msg.switch_on);
+            secondsToTime("clockTimeOffLabel" + msg.program_id, msg.switch_off);
         });
 
 //---------------------------------------------Countdown Sockets-------------------------------
@@ -47,7 +49,7 @@
             kitchenGauge.refresh(msg.fr)
         });
 
-//--------------------------------------------------------------------------
+//-----------------------------STARTS---------------------------------------------
 
 
         // program_id, module_id, name, state, automatic

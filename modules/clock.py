@@ -44,7 +44,8 @@ class Clock:
         self._module_id = int(row[1])
         self._name = row[2]
         self._pin = int(row[3])
-        self._datetime_to_switch_on = self.seconds_to_datetime(int(row[4]))
+        self._seconds_to_switch_on = int(row[4])
+        self._datetime_to_switch_on = self.seconds_to_datetime(self._seconds_to_switch_on)
         self._seconds_to_switch_off = int(row[5])
         self._state = row[6]
         self._automatic = int(row[7])
@@ -112,6 +113,12 @@ class Clock:
 
     def get_program_id(self):
         return self._program_id
+
+    def get_seconds_to_switch_on(self):
+        return self._seconds_to_switch_on
+
+    def get_seconds_to_switch_off(self):
+        return self._seconds_to_switch_off
 
     def get_time_left(self):
         if self._state:
