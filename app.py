@@ -72,7 +72,10 @@ def on_clock_pause_timer(data):
 @socketio.on('clock_resume_timer')
 def on_clock_resume_timer(data):
     module = get_module_by_program_id(data)
-    socket_emit_clock_timer(data, module.get_time_left())
+    # socket_emit_clock_timer(data, module.get_time_left())
+    socketio.emit('update_clock_label_timers_on_start',
+                  {'program_id': data['program_id'], 'switch_on': module.get_seconds_to_switch_on(),
+                   'switch_off': module.get_seconds_to_switch_off(), 'timeout': module.get_time_left()})
     module.timer_resume()
 
 
