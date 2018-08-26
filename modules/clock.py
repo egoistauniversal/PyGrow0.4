@@ -103,10 +103,10 @@ class Clock:
     def invert_state(self):
         if self._state:
             self._state = 0
-            print("Foco is OFF")
+            # print("Foco is OFF")
         else:
             self._state = 1
-            print("Foco is ON")
+            # print("Foco is ON")
 
     def get_property_list(self):
         return [self._program_id, self._module_id, self._name, self._state, self._automatic]
